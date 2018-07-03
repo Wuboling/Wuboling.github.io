@@ -1,0 +1,2 @@
+# WestGG.github.io
+blog
