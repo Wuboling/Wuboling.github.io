@@ -1,2 +1,1 @@
-# WestGG.github.io
-blog
+## Hello Word
