@@ -5,9 +5,152 @@
     <description>Every failure is leading towards success.</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 08 Aug 2018 23:01:43 +0800</pubDate>
-    <lastBuildDate>Wed, 08 Aug 2018 23:01:43 +0800</lastBuildDate>
+    <pubDate>Fri, 10 Aug 2018 00:00:07 +0800</pubDate>
+    <lastBuildDate>Fri, 10 Aug 2018 00:00:07 +0800</lastBuildDate>
     <generator>Jekyll v3.8.3</generator>
+    
+      <item>
+        <title>理想监控系统</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;本文主要参考陈皓大哥的文章，在此基础之上结合自己的想法做了一个总结，还请多多指教。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;why-need-监控-&quot;&gt;Why need 监控 ??&lt;/h2&gt;
+
+&lt;h4 id=&quot;监控系统起源与发展&quot;&gt;监控系统起源与发展&lt;/h4&gt;
+
+&lt;h6 id=&quot;起源&quot;&gt;起源&lt;/h6&gt;
+&lt;ul&gt;
+  &lt;li&gt;分布式系统的出现是由于单机的性能瓶颈。&lt;/li&gt;
+  &lt;li&gt;为了解决这个问题，必须将单体应用拆分到不同的机器上，不同的机器提供不同的服务来协同完成一件事。这就是分布式系统的演变过程。随着而来有很多问题，其中有个非常典型的问题即是。
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;如果分布式系统一台机器出现问题，特别是支付行业，如何及时发现并挽救损失？？&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;答案就是&lt;strong&gt;监控&lt;/strong&gt;，这就是监控系统出现的最直接原因。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h6 id=&quot;发展&quot;&gt;发展&lt;/h6&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;那么接下的问题就变成，如何打造一个符合要求的监控系统。为此，我们需要做到的目标为：&lt;/em&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;全栈监控&lt;/strong&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://static001.geekbang.org/resource/image/cf/66/cf6fe8ee30a3ac3b693d1188b46e4e66.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;全链路监控&lt;/strong&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;&lt;em&gt;Google Dapper -&amp;gt; 对应的开源实现Zipkin&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
+          &lt;li&gt;国内：美团的 CAT，淘宝 eagle eye，微博的 Watchman，还有听云 Server 等&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;什么是好的监控系统&quot;&gt;什么是好的监控系统&lt;/h2&gt;
+
+&lt;h4 id=&quot;特征&quot;&gt;特征&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;关注于整体应用的 SLA（service-level agreement)
+    &lt;ul&gt;
+      &lt;li&gt;即为对外提供的服务质量，关系到服务的可用性&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;关联指标聚合
+    &lt;ul&gt;
+      &lt;li&gt;服务的具体实例和主机关联在一起,比如服务有可能运行在JVM OR Tomcat..&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;快速故障定位
+    &lt;ul&gt;
+      &lt;li&gt;关键在于对一个请求的 trace 监控&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;监控什么&quot;&gt;监控什么&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;监控对象(全栈监控)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://static001.geekbang.org/resource/image/cf/66/cf6fe8ee30a3ac3b693d1188b46e4e66.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;请求链路(全链路监控)&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://static001.geekbang.org/resource/image/ab/81/ab79054e0a3cf2d8f1d696e3c367ab81.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;能力&quot;&gt;能力&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;体检能力
+    &lt;ul&gt;
+      &lt;li&gt;性能管理
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;通过系统大盘，找到系统瓶颈，并有针对性地优化系统和相应代码&lt;/strong&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;容量管理
+        &lt;ul&gt;
+          &lt;li&gt;提供一个全局的系统运行时数据的展示，为&lt;strong&gt;扩容OR服务降级&lt;/strong&gt;提供决策依据&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;急诊能力
+    &lt;ul&gt;
+      &lt;li&gt;定位问题
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;以快速地暴露并找到问题的发生点，帮助技术人员诊断问题&lt;/strong&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;性能分析
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;非预期的性能问题出现时，可以快速地找到系统的瓶颈，并可以帮助开发人员深入代码。&lt;/strong&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;最终效果&quot;&gt;最终效果&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;当我们做好以上要求的一些细节之后，当问题出现时，能达到的效果&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;strong&gt;了解故障的影响面&lt;/strong&gt;：
+      &lt;ul&gt;
+        &lt;li&gt;当一台机器挂掉是因为 CPU 或 I/O ， SQL 操作过慢 过高的时候，马上可以知道其会影响到哪些对外服务的 API&lt;/li&gt;
+        &lt;li&gt;当一个服务响应过慢的时候，我们马上能关联出来是否在做 Java GC，或是其所在的计算结点上是否有资源不足的情况，或是依赖的服务是否出现了问题&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;可以做出调度&lt;/strong&gt;：
+      &lt;ul&gt;
+        &lt;li&gt;现某个服务过慢是因为 CPU 使用过多，就可以做弹性伸缩&lt;/li&gt;
+        &lt;li&gt;发现某个服务过慢是因为 MySQL 出现了一个慢查询，就无法在应用层上做弹性伸缩，只能做流量限制，或是降级操作了&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;最终目的 -&amp;gt; 自动化运维&lt;/strong&gt;：
+      &lt;ul&gt;
+        &lt;li&gt;自动化扩容 OR 服务降级&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://static001.geekbang.org/resource/image/6b/33/6b17dd779cfecd62e02924dc8618e833.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 09 Aug 2018 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/08/09/monitorSystem/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/08/09/monitorSystem/</guid>
+        
+        <category>监控系统</category>
+        
+        
+      </item>
     
       <item>
         <title>Java 字节码</title>
