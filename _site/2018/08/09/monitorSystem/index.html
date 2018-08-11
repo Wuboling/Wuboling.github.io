@@ -428,6 +428,22 @@
 </style>
 
 
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+    owner: 'WestGG',
+    repo: 'https://github.com/WestGG/WestGG.github.io',
+    oauth: {
+        client_id: '30d2858c3d2340da9a44',
+        client_secret: '6e56edc4f49ccfd4cae15074ff3799c3e769bd2f',
+    },
+});
+gitment.render('gitmentContainer');
+</script>
+
+
     <!-- Footer -->
 <footer>
     <div class="container">

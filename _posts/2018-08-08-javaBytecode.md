@@ -38,12 +38,34 @@ println // consume the result and print it
 ---
 ##### 相关基础知识
 
-- JVM栈模型
+###### JVM栈模型
+
+如何将JVM的栈模型与我们已有的认知映射起来呢？
+
+- 方法对应着栈帧
+- 方法的参数和局部变量对应着局部变量表
+- CPU的寄存器对应着操作数栈(operandStack)
+
+**此刻，学习的重心应该围绕着OperandStack，因为字节码的设计都是围绕着OperandStack。**
+
+- 局部变量表的load,store系列指令对应数据(可以是数值类型，也可以是引用类型)与OperandStack的交互：push,pop；
+- 常量池的const，ldc系列指令对应数据与OperandStack的交互：push;
+- 另外，方法之间的相互调用则是invoke系统指令,这是个打的话题，后面话有个专门的文章来讲；
 
 ![](http://java8.in/wp-content/uploads/2014/07/JVM_Structure.png)
 
-- Object Model
+###### Object Model
 
+> Object Model代表着一个对象在内存中的布局，虚拟机规范针对此设计系列的指令,来访问和赋值实例变量。
+
+**主要指令有：**
+
+- getfield -> 访问实例变量；
+- putfield -> 给实例变量赋值;
+- 对于类变量的访问和赋值则有: getstatic,putstatic系列指令；
+
+
+**下图为普通对象在内存中的布局，对于数组：其头部多加了一length表示数组长度，对应着arraylength指令**
 ```
                                         
  *                                   Hotspot java object model(normal)
@@ -71,14 +93,15 @@ println // consume the result and print it
 
 #### ByteCode简介
 
-- 字节码设计理念：***小而紧凑,面向对象***
+- 字节码设计理念：**小而紧凑,面向类型**
 
 ##### 字节码格式
 ```
 <index> <opcode> [ <operand1> [ <operand2>... ]] [<comment>]
 ```
-- opcode 的大小只有 1 byte(目前字节码总数 xx)；
+- opcode 的大小只有 1 byte(理论字节码总数为2^8 个)；
 - 针对一些字节码操作做出优化,使得字节码更短;
+  - 比如const系列指令；
 
 ##### 字节码类型
 - 分类型：数值类型，引用类型 => [字节码助记符](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-7.html)
@@ -97,7 +120,7 @@ invokestatic  println // consume the result and print it
 ```
 
 
-#### Example
+#### Examples
 
 - 复杂代码
 
