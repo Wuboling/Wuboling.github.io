@@ -349,6 +349,23 @@
 
                 <!--Gitalk评论start  -->
                 
+                <!-- 引入Gitalk评论插件  -->
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+                <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+                <div id="gitalk-container"></div>
+                <script type="text/javascript">
+                    var gitalk = new Gitalk({
+                    clientID: '15960bc9254de5fccc43',
+                    clientSecret: '0dc00529047692d2b91e3388c33215e7ff552a29',
+                    repo: 'WestGG.github.io',
+                    owner: 'WestGG',
+                    admin: ['WestGG'],
+                    distractionFreeMode: true,
+                    id: window.location.pathname,
+                    });
+                    gitalk.render('gitalk-container');
+                </script>
+                
                 <!-- Gitalk end -->
 
                 
@@ -428,20 +445,7 @@
 </style>
 
 
-<div id="gitmentContainer"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-    owner: 'WestGG',
-    repo: 'https://github.com/WestGG/WestGG.github.io',
-    oauth: {
-        client_id: '30d2858c3d2340da9a44',
-        client_secret: '6e56edc4f49ccfd4cae15074ff3799c3e769bd2f',
-    },
-});
-gitment.render('gitmentContainer');
-</script>
+
 
 
     <!-- Footer -->
