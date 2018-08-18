@@ -22,7 +22,7 @@ tags:                               #标签
 ### JVM 
 - 从JVM 谈Java
   - [x] [Java字节码](https://github.com/WestGG/WestGG.github.io/blob/master/_posts/2018-08-08-javaBytecode.md)
-  -  从JVM谈Java面向对象的实现机制
+  - [ ] 从JVM谈Java面向对象的实现机制
       - [x] [Java Object Model](https://github.com/WestGG/WestGG.github.io/blob/master/_posts/2018-08-17-javaObjectMode.md)
       - [ ] 其他..
 - JVM相关技术
