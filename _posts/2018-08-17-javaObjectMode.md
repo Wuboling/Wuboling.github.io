@@ -70,11 +70,7 @@ Object object = new Object();
 - 字段继承
 - 字段排序
 
-#### 预备知识
-
 ##### 字段继承与排序
-
-> 
 
 ###### 字段继承
 - 在面向对象的设计中，子类会继承父类的字段，虚方法等。Java作为面向对象实现最彻底的语言亦遵守这个规定
@@ -95,7 +91,8 @@ Object object = new Object();
  对象 | 4N |
  字段 |    | CN
 
-64位CPU，无压缩| 对象 | 字段
+64位CPU，无压缩| 对象 | 字段west
+
 ---|---|---
  对象 | 8N |
  字段 |    | CN
@@ -126,9 +123,9 @@ Object object = new Object();
 ```
 
 
-### Example
+## Example
 
--  new Object( )
+####  new Object( )
 
 ```
  *  new Object( )
@@ -169,7 +166,7 @@ Object object = new Object();
 
 ---
 
-- new B( )
+#### new B( )
 
 ```
 Class A {
