@@ -23,8 +23,8 @@ tags:                               #标签
 - 从JVM 谈Java
   - [x] [Java字节码](https://github.com/WestGG/WestGG.github.io/blob/master/_posts/2018-08-08-javaBytecode.md)
   -  从JVM谈Java面向对象的实现机制
-    - [x] [Java Object Model](https://github.com/WestGG/WestGG.github.io/blob/master/_posts/2018-08-17-javaObjectMode.md)
-    - [ ] 其他..
+      - [x] [Java Object Model](https://github.com/WestGG/WestGG.github.io/blob/master/_posts/2018-08-17-javaObjectMode.md)
+      - [ ] 其他..
 - JVM相关技术
   - [ ] 内存管理
   - [ ] 即时编译器
@@ -35,7 +35,7 @@ tags:                               #标签
 #### 监控系统Cat实现剖析
 - [x] [为何需要监控系统](https://github.com/WestGG/WestGG.github.io/blob/master/_posts/2018-08-09-monitorSystem.md)
 - 高性能Cat的实现,从客户端到服务端
-
+ 
 #### Linux 常用命令集合
 - Linux 常用命令集合
 - Linux 调优命令集合
