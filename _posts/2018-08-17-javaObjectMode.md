@@ -9,8 +9,7 @@ catalog: true                       # 是否归档
 tags:                               #标签
     - objectmodel
 ---
-## Q:如何计算对象的大小
-
+## Q:如何计算hotspot虚拟机中对象的大小
 
 ```
 Object object = new Object();
@@ -70,11 +69,7 @@ Object object = new Object();
 - 字段继承
 - 字段排序
 
-#### 预备知识
-
 ##### 字段继承与排序
-
-> 
 
 ###### 字段继承
 - 在面向对象的设计中，子类会继承父类的字段，虚方法等。Java作为面向对象实现最彻底的语言亦遵守这个规定
@@ -95,7 +90,8 @@ Object object = new Object();
  对象 | 4N |
  字段 |    | CN
 
-64位CPU，无压缩| 对象 | 字段
+64位CPU，无压缩| 对象 | 字段west
+
 ---|---|---
  对象 | 8N |
  字段 |    | CN
@@ -126,9 +122,9 @@ Object object = new Object();
 ```
 
 
-#### Example
+## Example
 
--  new Object( )
+####  new Object( )
 
 ```
  *  new Object( )
@@ -169,7 +165,7 @@ Object object = new Object();
 
 ---
 
-- new B( )
+#### new B( )
 
 ```
 Class A {
@@ -220,8 +216,13 @@ Class B extend A {
  *  +--------------------+40 --> 刚好整除8，不同padding(对象对齐)
  *  |       string b     |  
  *  +--------------------+  
-
-
 ```
 
+---
 
+## 总结
+
+本文讲解了如何计算Java对象大小，具体的思路为：
+- 对象的组成部分，在Java对象内存模型(即为Java Object Model)的实现中： 对象 = header+body,这是Java对象大小计算的基础
+- 相关预备知识，比如内存对齐所带来的gap和padding。要理解gap和padding，其重点在于理解为什么需要对齐？还是因为**CPU的寻址机制**
+- 最后，用两个小例子，讲解了如何在32位和64位CPU平台计算对象大小，需要注意的是64位CPU平台可以实现压缩指针 => [赠送slides-ppt](https://slides.com/heizhan/object-model#/)
