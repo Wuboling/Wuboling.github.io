@@ -10,7 +10,7 @@
     <meta name="keywords"  content="hello,hello,helloword">
     <meta name="theme-color" content="">
     
-    <title>Hello Word - Hello Word | 和菜头</title>
+    <title>监控系统 - Hello Word | 和菜头</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2018/07/08/helloWorld/">
+    <link rel="canonical" href="http://localhost:4000/2018/08/19/cat/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -173,15 +173,15 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/#生活" title="生活">生活</a>
+                        <a class="tag" href="/tags/#CAT" title="CAT">CAT</a>
                         
                     </div>
-                    <h1>Hello Word</h1>
+                    <h1>监控系统</h1>
                     
                     
-                    <h2 class="subheading">博客索引</h2>
+                    <h2 class="subheading">高性能CAT实现</h2>
                     
-                    <span class="meta">Posted by west on July 8, 2018</span>
+                    <span class="meta">Posted by west on August 19, 2018</span>
                 </div>
             </div>
         </div>
@@ -199,57 +199,127 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<h2 id="文章分类">文章分类</h2>
+				<h3 id="cat架构">CAT架构</h3>
 
-<h3 id="jvm">JVM</h3>
 <ul>
-  <li>从JVM 谈Java
+  <li>设计理念：简单
     <ul>
-      <li>Java字节码</li>
-      <li>从JVM谈Java面向对象的实现机制</li>
+      <li>架构简单：client,server(home,consumer)</li>
+      <li>使用简单：根据需要可进行定制(mvc)，编码成本较低</li>
+      <li>部署简单: 单机可运行，同时配置也简单</li>
     </ul>
   </li>
-  <li>JVM相关技术
+  <li>特点:实时,全量,高并发，高可用,故障容忍,高吞吐,可扩展,不保证可靠(允许消息丢失，CAT服务端可以做到4个9的可靠性)
     <ul>
-      <li>内存管理</li>
-      <li>即时编译器</li>
-    </ul>
-  </li>
-  <li>相关资源
-    <ul>
-      <li>todo</li>
+      <li>相关解释：当消息创建完成之后就进入消息队列等待被发送，根据路由规则发送到不同的server，这意味着CAT的消息是分片处理的，所以说CAT具有可拓展和高可用的特性；另外由于CAT使用了netty作为消息传输工具，因为也具有消息高吞吐的功能；最后，<strong>不可靠保证指的是消息在客户端和服务端可以被丢弃</strong>,why？？这是个很重要的设计，保障了客户端和服务端一定的故障容忍性，且看下文。</li>
     </ul>
   </li>
 </ul>
 
-<h3 id="其他">其他</h3>
-<h4 id="监控系统cat实现剖析">监控系统Cat实现剖析</h4>
+<hr />
+
+<h3 id="client设计">Client设计</h3>
+
+<blockquote>
+  <p>设计理念: 占用较少的资源，异步。这就意味着cpu,memory的使用要尽可能少。</p>
+</blockquote>
+
+<h4 id="消息在客户端的生命周期">消息在客户端的生命周期</h4>
+
+<p><img src="https://tech.meituan.com/img/cat/client01.png" alt="" /></p>
+
+<p><strong>如上图</strong>,一条客户端消息的生命周期主要包含：<strong><em>生命周期=生产+发送</em></strong></p>
+
 <ul>
-  <li>为何需要监控系统</li>
-  <li>高性能Cat的实现,从客户端到服务端</li>
+  <li>所以client端，内存资源的消耗主要集中在：消息,包括普通消息，心跳消息等</li>
+  <li>消息占用的CPU资源主要在：
+    <ul>
+      <li>client消息端cpu资源主要消耗在消息的转移：<strong>从MessageTree-&gt;netty的directbuffer</strong>,即堆内到堆外。内存间的数据转移目前只能通过CPU,这意味着消息越多量越大越消耗CPU资源，同时也该警惕堆外内存带来的系列问题。</li>
+      <li>heartbeat线程一分钟运行运行一次，其占用的CPU资源可以忽略，通过调用接口ManagementFactory提供的MXBean来获取当前client的系统状态，包CPU负荷，内存，线程，GC等信息。</li>
+    </ul>
+  </li>
+  <li><strong>最后，除了消息的产生之同步的，消息的发送阶段是异步的，并且是在生成之后立马塞到消息队列等待被发送</strong>
+    <ul>
+      <li>如果这时server端集群奔溃，client的消息将会挤压，这会不会导致client奔溃呢？cat-client对消息队列长度做出限制，默认1000，尽量避免这种情况出现，<strong>这就意味着如果不满足上述条件客户端消息将丢失</strong>。</li>
+    </ul>
+  </li>
 </ul>
 
-<h4 id="linux-常用命令集合">Linux 常用命令集合</h4>
+<hr />
+
+<h3 id="server设计">Server设计</h3>
+<blockquote>
+  <p>设计理念 : 无锁，异步，高性能。</p>
+</blockquote>
+
+<h4 id="消息在服务端的生命周期">消息在服务端的生命周期</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>graph LR
+Receiver--&gt; Comsumer
+Comsumer--&gt; Period
+Period--&gt;PeriodTask.queue
+PeriodTask.queue--&gt; Analyzers
+Analyzers--&gt;makeReport
+Analyzers--&gt;dumpFile
+</code></pre></div></div>
+
+<p><strong>如上图</strong>,消息在server端的生命周期=被接收+被消费，那么相关设计理念体现在哪里？</p>
 <ul>
-  <li>Linux 常用命令集合</li>
-  <li>Linux 调优命令集合</li>
+  <li>利用多线程来达到无锁化。period代表一个小时周期，内含各种periodTask(对应着不同的Analyzer)。一个periodTask等同于一个线程，各自有自己的消息队列存储消息，避免了对同个消息的竞争使用，这就是无锁化。</li>
+  <li>利用periodTask管理Message,这就做到异步化。因为消息在到底server端之后，同步的流程只有被接收阶段，在被消费阶段是多线程通过异步的方式进行的。比如报表的制作，比如消息在period到期后被dump，如果设置了hdfs将被异步发送到远程的hdfs。</li>
+  <li>无锁和异步化做的工作，结合netty，使得server端的消息处理称得上高性能。</li>
+  <li><strong>那么，server端什么时候会发生消息丢失呢</strong>？当消息时间戳无法匹配当前的period，发生的原因可以是时间不准，原因可以是机器时间不准，也可是period过期；或者是queen无法塞进新消息等等</li>
 </ul>
 
-<h4 id="读书笔记">读书笔记</h4>
+<h4 id="消息的存储设计">消息的存储设计</h4>
 
+<p>CAT的消息存储是挑战极大：</p>
+<ul>
+  <li>
+    <p><strong>美团每天处理消息1000亿左右，大小大约100TB，单物理机高峰期每秒要处理100MB左右的流量</strong>。</p>
+  </li>
+  <li>
+    <p>整体的设计如下：</p>
+    <ul>
+      <li>维护一份index文件+data文件，period到期多个块顺序存储，减少了IO次数。<strong>这跟kafka的消息存储机制很像啊，果然思想层的东西都是相通的。</strong></li>
+      <li>index的组成：domain-ipInhex-timestamp-index,其中index大小为48bit=32bit块索引+16bit块偏移地址,索引与文件的对应关系如下图。</li>
+      <li>CAT读取消息的时候，首先根据Message-ID的前面三段确定唯一的索引文件，在根据Message-ID第四段确定此Message-ID索引位置，根据索引文件的48bits读取数据文件的内容，然后将数据文件进行GZIP解压，在根据块内偏移地址读取出真正的消息内容。</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="https://tech.meituan.com/img/cat/server05.png" alt="" /></p>
+
+<hr />
+
+<h3 id="启示">启示</h3>
+
+<p>CAT的源码实现给我们提供了如何打造高吞吐量、近实时的server思路，即是：</p>
+<ul>
+  <li>无锁与多线程，异步，高性能的网络通讯；</li>
+  <li>不可靠的消息保证，也说明了功能设计中的得失与均衡；</li>
+  <li>其数据分片的设计也造就了其强大拓展性，总之，CAT的设计无论是整体还是代码设计都非常优雅，其源码非常值得一读！</li>
+</ul>
+
+<h3 id="相关参考">相关参考</h3>
+
+<ul>
+  <li><a href="https://tech.meituan.com/CAT_in_Depth_Java_Application_Monitoring.html">深度剖析开源分布式监控CAT</a></li>
+  <li><a href="https://github.com/dianping/cat">CAT</a></li>
+</ul>
 
 
                 <hr style="visibility: hidden;">
 
                 <ul class="pager">
                     
-                    
-                    <li class="next">
-                        <a href="/2018/07/08/javaBytecode/" data-toggle="tooltip" data-placement="top" title="Java 字节码">
-                        Next<br>
-                        <span>Java 字节码</span>
+                    <li class="previous">
+                        <a href="/2018/08/17/javaObjectMode/" data-toggle="tooltip" data-placement="top" title="Java Object model">
+                        Previous<br>
+                        <span>Java Object model</span>
                         </a>
                     </li>
+                    
                     
                 </ul>
 
