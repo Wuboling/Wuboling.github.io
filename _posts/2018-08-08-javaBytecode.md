@@ -176,14 +176,15 @@ public boolean offer(E);
 >   - 各个环境的JDK运行环境要一致；
 >   - 有时环境问题并不能选择，那么面向接口编程是最好的选择；
 
-```
+~~~mermaid
 graph LR
 Receiver--> realComsumer
 realComsumer--> PeriodTask
 PeriodTask--> Analyzer
 Analyzer-->makeReport
 Analyzer-->dumpFile
-```
+~~~
+
 - 罪魁祸首
 
 ```
