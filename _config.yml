@@ -1,35 +1,29 @@
 # Site settings
-title: HELLO WORD
-SEOTitle: Hello Word | 和菜头
+title: HELLO WORLD
+SEOTitle: Hello World | 和菜头
 header-img: img/about_workEnv.jpeg
 email: west_20@163.com
 description: "Every failure is leading towards success."
-keyword: "hello,hello,helloword"
-url: "http://WestGG.github.io"          # your host, for absolute URL
-baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
-github_repo: "https://github.com/WestGG/WestGG.github.io.git" # you code repository
+keyword: "hello,hello,helloworld"
+url: "http://WestGG.github.io" 
+baseurl: "" 
+github_repo: "https://github.com/WestGG/WestGG.github.io.git" 
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "Stay hunger,Stay foolish!"
-sidebar-avatar: /img/about-Me.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/about-me.jpeg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
 # SNS settings
 RSS: false
-# weibo_username:     qiubaiying
-#zhihu_username:     qiubaiying
 github_username:     WestGG
-#facebook_username:  baiying.qiu.7
-#jianshu_username:   e71990ada2fd
-#twitter_username:   qiubaiying
 
 
 
 
 # Build settings
-# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
 permalink: pretty
 paginate: 8
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
