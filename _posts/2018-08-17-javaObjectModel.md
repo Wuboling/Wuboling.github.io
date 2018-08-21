@@ -1,6 +1,6 @@
 ---
 layout:     post                    # 使用的布局（不需要改）
-title:      Java Object model       # 标题 
+title:      Java Object Model       # 标题 
 subtitle:   对象大小计算            #副标题
 date:       2018-08-17              # 时间
 author:     west                    # 作者
