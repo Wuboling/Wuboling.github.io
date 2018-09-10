@@ -95,8 +95,7 @@ Object object = new Object();
  对象 | 4N |
  字段 |    | CN
 
-64位CPU，无压缩| 对象 | 字段west
-
+64位CPU，无压缩| 对象 | 字段
 ---|---|---
  对象 | 8N |
  字段 |    | CN
