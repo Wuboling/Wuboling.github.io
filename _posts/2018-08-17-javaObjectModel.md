@@ -1,6 +1,6 @@
 ---
 layout:     post                    # 使用的布局（不需要改）
-title:      Java Object model       # 标题 
+title:      Java Object Model       # 标题 
 subtitle:   对象大小计算            #副标题
 date:       2018-08-17              # 时间
 author:     west                    # 作者
@@ -12,14 +12,17 @@ tags:                               #标签
 ## Q:如何计算hotspot虚拟机中对象的大小
 
 ```
+// 求object对象的大小
 Object object = new Object();
 ```
+
 
 ## 预备知识
 
 #### 对象组成
 
-> Object model = header + body
+> - Object model = header + body.
+> - 在hotspot的的对象模型中，对象由header以及body两部分组成。其中body存储对象的实例变量字段，而header则包含markword+metadata.
 
 ```
  *  普通对象
@@ -66,6 +69,8 @@ Object object = new Object();
 
 ##### 字段
 
+> 知道了对象的内存布局之后，是可以计算出当前类的实例变量字段大小，但Java作为一门面向对象语言，子类会继承父类的实例变量字段，因此在计算对象的大小时，需要考虑字段继承问题.
+
 - 字段继承
 - 字段排序
 
@@ -73,7 +78,7 @@ Object object = new Object();
 
 ###### 字段继承
 - 在面向对象的设计中，子类会继承父类的字段，虚方法等。Java作为面向对象实现最彻底的语言亦遵守这个规定
-- 在Hotspot的实现中，子类的object model 将继承得来的字段直接存储在对象中
+ 在Hotspot的实现中，子类的object model 将继承得来的字段直接存储在对象中
 
 ###### 字段排序
 - 为了更好地利用内存，会在对象内对字段进行排序，顺序为：8bytes,4bytes,2bytes,1bytes，指针类型最后
@@ -90,8 +95,7 @@ Object object = new Object();
  对象 | 4N |
  字段 |    | CN
 
-64位CPU，无压缩| 对象 | 字段west
-
+64位CPU，无压缩| 对象 | 字段
 ---|---|---
  对象 | 8N |
  字段 |    | CN
@@ -123,6 +127,8 @@ Object object = new Object();
 
 
 ## Example
+
+> 经过前面预备知识的铺垫，现在来尝试下计算对象的大小吧
 
 ####  new Object( )
 
