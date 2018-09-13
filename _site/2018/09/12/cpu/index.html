@@ -10,7 +10,7 @@
     <meta name="keywords"  content="hello,hello,helloworld">
     <meta name="theme-color" content="">
     
-    <title>Java 字节码 - Hello World | 和菜头</title>
+    <title>计算机组成原理 - Hello World | 和菜头</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2018/07/08/javaBytecode/">
+    <link rel="canonical" href="http://localhost:4000/2018/09/12/cpu/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -173,15 +173,15 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/#bytecode" title="bytecode">bytecode</a>
+                        <a class="tag" href="/tags/#cpu" title="cpu">cpu</a>
                         
                     </div>
-                    <h1>Java 字节码</h1>
+                    <h1>计算机组成原理</h1>
                     
                     
-                    <h2 class="subheading">从入门到放弃</h2>
+                    <h2 class="subheading">cpu cache知识总结</h2>
                     
-                    <span class="meta">Posted by west on July 8, 2018</span>
+                    <span class="meta">Posted by west on September 12, 2018</span>
                 </div>
             </div>
         </div>
@@ -199,255 +199,115 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<h4 id="简单的例子">简单的例子</h4>
+				<h3 id="相关知识">相关知识</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 一段简单的代码
-println(3+4);
+<h4 id="cpu-cache相关">CPU Cache相关</h4>
+
+<h5 id="架构">架构</h5>
+
+<p>AMD Athlon 处理器架构</p>
+<ul>
+  <li>望这张图，眼花缭乱？其实现代的CPU可以简化为两部分：cpu核心，cache。而本文的核心在与讲解cache。</li>
+  <li>Athlon的缓存架构为2层:L1和L2。</li>
+</ul>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Athlon_arch.png/1280px-Athlon_arch.png" alt="cpu缓存行体系" height="400" weight="300" /></p>
+
+<p>&lt;/br&gt;
+&lt;/br&gt;
+在了解Athlon缓存架构之前，我们需要了解下CPU的相关属性，以帮助理解为何需要cpu缓存。</p>
+
+<h5 id="相关属性">相关属性</h5>
+
+<p>首先是cpu的频率，其决定了其每秒能传输数据量。&lt;/br&gt;</p>
+
+<p>例如，配置为2GHZ,内部带宽为64的CPU，传输效率为16GB/s。计算公式为：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// cpu 带宽计算公式
+前端总线带宽＝系统外频×N倍速×64位总线位宽/8
+</code></pre></div></div>
+<p>其次是内存的频率，其内存带宽的计算公式为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 内存带宽计算公式,'data per clock' 默认为1 
+内存带宽 = width (number of bits) x clock rate x data per clock / 8
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 词法分析
-3 4 + println
-</code></pre></div></div>
+<p>根据计算公式，配置为2GHZ的CPU带宽为16GB/s，DDR2-800的内存带宽约为 6,400 MB/s – 12,800 MB/s，两者差距最大为4倍左右。当CPU从内存获取数据时，将耗费大量的时间来等待数据到达，这意味着性能将降为原先1/4左右，这让人无法容忍。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3       // push 3 on the stack
-4       // push 4 on the stack
-+       // consume 3 and 4 and push the result on the stack
-println // consume the result and print it
-</code></pre></div></div>
-
-<p><strong><em>问题:如何将上面这段代码转化成为字节码？</em></strong></p>
+<p><strong>所以有了CPU缓存。</strong></p>
 
 <hr />
-<h5 id="相关基础知识">相关基础知识</h5>
 
-<h6 id="jvm栈模型">JVM栈模型</h6>
+<h5 id="cpu缓存">CPU缓存</h5>
 
-<p>如何将JVM的栈模型与我们已有的认知映射起来呢？</p>
+<p>为了最大程度发挥CPU的性能，就得让CPU一直在忙，所以目的在于减少其等待的时间。因此CPU缓存出现。</p>
 
+<p>缓存出现的目的是为了解决CPU与内存的巨大的数据传输能力差距问题，其作为一个缓冲，提前将数据存储在相应的缓存，当CPU读取数据时，直接从缓存读取而不是从内存中读，从而减少CPU等待。</p>
+
+<p>下图为CPU的访问各个组件需要的时间：</p>
+
+<p><strong>可以很明显地看到，cpu访问内存对比访问缓存是非常耗时的</strong>。</p>
+
+<p><img src="http://7xp2eu.com1.z0.glb.clouddn.com/hierarchy%20cache.png" alt="cpu缓存行体系" height="350" weight="300" /></p>
+
+<p>&lt;/br&gt;
+&lt;/br&gt;</p>
+
+<p>常见的CPU缓存有L1，L2，L3等：</p>
+
+<p><img src="http://7xp2eu.com1.z0.glb.clouddn.com/mac_cpu_cache_info.png" alt="cpu缓存行体系" height="400" weight="300" /></p>
+
+<p>&lt;/br&gt;
+&lt;/br&gt;</p>
+
+<p><strong>所以CPU缓存是如何组织数据呢？答案为缓存行(cache line)</strong></p>
+
+<h5 id="cache-line">Cache Line</h5>
+
+<p>常见的CPU缓存行与内存行对应结构设计:</p>
 <ul>
-  <li>方法对应着栈帧</li>
-  <li>方法的参数和局部变量对应着局部变量表</li>
-  <li>CPU的寄存器对应着操作数栈(operandStack)</li>
+  <li>L1分为instrution,data两部分</li>
+  <li>L2分存储数据，不区分instrution和data。再提一句，不同的cpu实现中，L2可以存一份L1中的数据，也可以不存，视具体的CPU而定。</li>
+  <li>L3 size最大，同时为多核共享(在现在的主流计算机中，L1+L2为cpu私有)</li>
 </ul>
 
-<p><strong>此刻，学习的重心应该围绕着OperandStack，因为字节码的设计都是围绕着OperandStack。</strong></p>
+<p><img src="https://qph.fs.quoracdn.net/main-qimg-a40cfe3886520103efec5f38d12d478a" alt="cpu缓存行体系" height="400" weight="300" /></p>
 
+<p>&lt;/br&gt;
+&lt;/br&gt;</p>
+
+<p>经典的缓存行结构设计有三种，上图的full,direct associative是两种极端：</p>
 <ul>
-  <li>局部变量表的load,store系列指令对应数据(可以是数值类型，也可以是引用类型)与OperandStack的交互：push,pop；</li>
-  <li>常量池的const，ldc系列指令对应数据与OperandStack的交互：push;</li>
-  <li>另外，方法之间的相互调用则是invoke系统指令,这是个打的话题，后面话有个专门的文章来讲；</li>
+  <li>full 结构结构表示数据可以缓存在缓存行的任意位置，cache 命中率高，但相对应的read，write数据时实现复杂。</li>
+  <li>direct 结构表示数据对应到一个缓存，cache命中率低，但相对应的read,write数据时实现简单。</li>
 </ul>
 
-<p><img src="http://java8.in/wp-content/uploads/2014/07/JVM_Structure.png" alt="" /></p>
+<p>两者都不是最优选项，而xx-way是对上面两者的折中，其中xx=2^n。比如 <strong>AMD Athlon为2-way结构， Ryzen-7-2700 为8-way结构</strong>。</p>
 
-<h6 id="object-model">Object Model</h6>
+<p>更多的CPU缓存行与内存行对应结构的相关问题可见 <a href="https://en.wikipedia.org/wiki/CPU_cache">wiki</a></p>
 
-<blockquote>
-  <p>Object Model代表着一个对象在内存中的布局，虚拟机规范针对此设计系列的指令,来访问和赋值实例变量。</p>
-</blockquote>
+<p>另外，目前的主流计算机CPU缓存行长度为64bit，了解这个可以帮助我们理解java8提供的@Contented注解为何填充可以提供性能的来龙去脉，其实就是填充缓存行，避免缓存行污染从而导致每次写缓存行都要将数据刷回内存，避免一来一回地访问内存，从而提高性能。</p>
 
-<p><strong>主要指令有：</strong></p>
-
+<p>更进一步可以看：</p>
 <ul>
-  <li>getfield -&gt; 访问实例变量；</li>
-  <li>putfield -&gt; 给实例变量赋值;</li>
-  <li>对于类变量的访问和赋值则有: getstatic,putstatic系列指令；</li>
+  <li><a href="https://www.zhihu.com/question/54812014/answer/141881795">R大知乎-Java伪共享问题</a></li>
+  <li><a href="https://github.com/LMAX-Exchange/disruptor">并发库disruptor</a></li>
 </ul>
 
-<p><strong>下图为普通对象在内存中的布局，对于数组：其头部多加了一length表示数组长度，对应着arraylength指令</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                        
- *                                   Hotspot java object model(normal)
- *                                   /
- *            +--------------------+
- *            |      markWord      | 
- *            +--------------------+  
- *            |      metaData      | \
- *            +--------------------+  \
- *            |       field 0      |   Point to the Runtime  Class Object
- *            +--------------------+
- *            |       ....         |
- *            +--------------------+
- *            |       field N      |
- *            +--------------------+ 
- *            |       padding      |
- *            +--------------------+
- 
-//  markWord bits layout :
-//  32 bits:
-//  --------
-//             hash:25 ------------&gt;| age:4    biased_lock:1 lock:2 (normal object)
-//             JavaThread*:23 epoch:2 age:4    biased_lock:1 lock:2 (biased object)
-</code></pre></div></div>
-
-<h4 id="bytecode简介">ByteCode简介</h4>
-
+<p>最后，我们需要谈谈缓存行中的数据的read,write问题:</p>
 <ul>
-  <li>字节码设计理念：<strong>小而紧凑,面向类型</strong></li>
+  <li>对于read,要考虑的是找到一个缓存行存放数据，这其中涉及缓存满时旧数据的淘汰算法问题</li>
+  <li>对于write,常见的写入方式有write-back,write-through，在多核环境下，会带来cpu的数据一致性问题。<strong>日后再来补充 todo</strong>。</li>
 </ul>
 
-<h5 id="字节码格式">字节码格式</h5>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;index&gt; &lt;opcode&gt; [ &lt;operand1&gt; [ &lt;operand2&gt;... ]] [&lt;comment&gt;]
-</code></pre></div></div>
-<ul>
-  <li>opcode 的大小只有 1 byte(理论字节码总数为2^8 个)；</li>
-  <li>针对一些字节码操作做出优化,使得字节码更短;
-    <ul>
-      <li>比如const系列指令；</li>
-    </ul>
-  </li>
-</ul>
-
-<h5 id="字节码类型">字节码类型</h5>
-<ul>
-  <li>分类型：数值类型，引用类型 =&gt; <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-7.html">字节码助记符</a></li>
-  <li>
-    <p>总结： <strong>针对不同的的运行时数据结构，VM 定义了相关的字节码，比如局部变量表的load+store两种字节码，再结合相关的类型，就是完整的局部变量表字节码集合</strong></p>
-  </li>
-  <li><strong>所以，经过上面的分析，printf(3+4) 转化为字节码是不是很简单了呢？</strong>
-    <ul>
-      <li>大概的字节码如下(伪码)</li>
-    </ul>
-  </li>
-</ul>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 假设 3 和 4 为 int 类型: 
-
-iconst_3       // push 3 on the stack
-iconst_4       // push 4 on the stack
-iadd           // consume 3 and 4 and push the result on the stack
-invokestatic  println // consume the result and print it
-</code></pre></div></div>
-
-<h4 id="examples">Examples</h4>
+<h2 id="参考">参考</h2>
 
 <ul>
-  <li>复杂代码</li>
+  <li><a href="https://en.wikipedia.org/wiki/CPU_cache">cpu-cache-wiki</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Cache_(computing)">cache(computing)-wiki</a></li>
+  <li><a href="https://www.extremetech.com/extreme/188776-how-l1-and-l2-cpu-caches-work-and-why-theyre-an-essential-part-of-modern-chips">How L1 and L2 CPU Caches Work, and Why They’re an Essential Part of Modern Chips</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/35386457">多处理器编程：从缓存一致性到内存模型</a></li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ## ConcurrentLinkedQueen.offer(E e)
-
- public boolean offer(E e) {
-    checkNotNull(e);
-    final Node&lt;E&gt; newNode = new Node&lt;E&gt;(e);
-
-    for (Node&lt;E&gt; t = tail, p = t;;) {
-        Node&lt;E&gt; q = p.next;
-        if (q == null) {
-          if (p.casNext(null, newNode)) {
-             if (p != t)                   
-                 casTail(t, newNode);
-                 return true;
-             }
-        } else if (p == q)
-            p = (t != (t = tail)) ? t : head;          // 这行代码有点复杂，对应的字节码如下
-        else
-           p = (p != t &amp;&amp; t != (t = tail)) ? t : q;
-    }
- }
-</code></pre></div></div>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public boolean offer(E);
-    Code:
-      ...
-
-      58: aload         4                  // localvarTable[4] = p;
-      60: aload         5                  // localvarTable[5] = q;
-      62: if_acmpne     88                 // if (q==p) 
-      65: aload_3                          // load t
-      66: aload_0                          // load this
-      67: getfield      #4                 // Field tail:Ljava/util/concurrent/ConcurrentLinkedQueue$Node;
-      70: dup                              // operadStack :... t(old value),tail,tail
-      71: astore_3                         // operadStack :... t(old value), tail   =&gt; update t
-      72: if_acmpeq     79                 // if( t(old value )== tail)
-
-      ....
-
-</code></pre></div></div>
-<hr />
-
-<ul>
-  <li><strong>NoSuchMethodError导致生产环境Cat OOM</strong></li>
-</ul>
-
-<blockquote>
-  <ul>
-    <li>由于Java8 编译，Java7 环境运行，导致NoSuchMethodError：</li>
-    <li>下图是cat server 消费消息的流程：
-      <ul>
-        <li>NosuchMehodError 最终导致DumpAnalyzer 挂掉，消息无法及时刷回磁盘，最终导致OOM。</li>
-      </ul>
-    </li>
-    <li>得出的教训：
-      <ul>
-        <li>各个环境的JDK运行环境要一致；</li>
-        <li>有时环境问题并不能选择，那么面向接口编程是最好的选择；</li>
-      </ul>
-    </li>
-  </ul>
-</blockquote>
-
-<pre><code class="language-mermaid">graph LR
-Receiver--&gt; realComsumer
-realComsumer--&gt; PeriodTask
-PeriodTask--&gt; Analyzer
-Analyzer--&gt;makeReport
-Analyzer--&gt;dumpFile
-</code></pre>
-
-<ul>
-  <li>罪魁祸首</li>
-</ul>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    // 原先的代码
-    ConcurrentHashMap&lt;String, String&gt; map = new ConcurrentHashMap&lt;String, String&gt;();
-    map.keySet();
-        
-        //修改后的代码
-    ConcurrentMap&lt;String, String&gt; map1 = new ConcurrentHashMap&lt;String, String&gt;();
-    map1.keySet();
-</code></pre></div></div>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Code:
-       0: new           #2                  // class java/util/concurrent/ConcurrentHashMap
-       3: dup
-       4: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."&lt;init&gt;":()V
-       7: astore_1
-       8: aload_1
-       9: invokevirtual #4                  // Method java/util/concurrent/ConcurrentHashMap.keySet:()Ljava/util/concurrent/ConcurrentHashMap$KeySetView;
-      12: pop
-      13: new           #2                  // class java/util/concurrent/ConcurrentHashMap
-      16: dup
-      17: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."&lt;init&gt;":()V
-      20: astore_2
-      21: aload_2
-      22: invokeinterface #5,  1            // InterfaceMethod java/util/concurrent/ConcurrentMap.keySet:()Ljava/util/Set;
-      27: pop
-      28: return
-
-</code></pre></div></div>
-
-<h4 id="finally">Finally</h4>
-
-<p>献上 <a href="https://slides.com/heizhan/deck#/">slidesPPT之Java字节码从入门到放弃</a></p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> _____________ 
-&lt; ThankYou ~  &gt;
- ------------- 
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
-
-</code></pre></div></div>
-
-<h4 id="参考">参考</h4>
-
-<ul>
-  <li><a href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">The Java® Virtual Machine Specification Java SE 8 Edition</a></li>
-  <li><a href="https://en.wikipedia.org/wiki/Java_virtual_machine">wiki-Java virtual machine</a></li>
-  <li><a href="http://hg.openjdk.java.net/jdk8/jdk8/hotspot/file/87ee5ee27509/src/share/vm/oops/markOop.hpp">markOop</a></li>
-</ul>
 
 
                 <hr style="visibility: hidden;">
@@ -455,19 +315,12 @@ Analyzer--&gt;dumpFile
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2018/07/08/helloWorld/" data-toggle="tooltip" data-placement="top" title="Hello Word">
+                        <a href="/2018/08/20/network/" data-toggle="tooltip" data-placement="top" title="网络知识">
                         Previous<br>
-                        <span>Hello Word</span>
+                        <span>网络知识</span>
                         </a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2018/08/09/monitorSystem/" data-toggle="tooltip" data-placement="top" title="理想监控系统">
-                        Next<br>
-                        <span>理想监控系统</span>
-                        </a>
-                    </li>
                     
                 </ul>
 

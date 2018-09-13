@@ -7,10 +7,10 @@
     <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Every failure is leading towards success.">
-    <meta name="keywords"  content="hello,hello,helloword">
+    <meta name="keywords"  content="hello,hello,helloworld">
     <meta name="theme-color" content="">
     
-    <title>Java Object model - Hello World | 和菜头</title>
+    <title>Java Object Model - Hello World | 和菜头</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2018/08/17/javaObjectMode/">
+    <link rel="canonical" href="http://localhost:4000/2018/08/17/javaObjectModel/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -176,7 +176,7 @@
                         <a class="tag" href="/tags/#objectmodel" title="objectmodel">objectmodel</a>
                         
                     </div>
-                    <h1>Java Object model</h1>
+                    <h1>Java Object Model</h1>
                     
                     
                     <h2 class="subheading">对象大小计算</h2>
@@ -201,7 +201,8 @@
 
 				<h2 id="q如何计算hotspot虚拟机中对象的大小">Q:如何计算hotspot虚拟机中对象的大小</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Object object = new Object();
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 求object对象的大小
+Object object = new Object();
 </code></pre></div></div>
 
 <h2 id="预备知识">预备知识</h2>
@@ -209,7 +210,10 @@
 <h4 id="对象组成">对象组成</h4>
 
 <blockquote>
-  <p>Object model = header + body</p>
+  <ul>
+    <li>Object model = header + body.</li>
+    <li>在hotspot的的对象模型中，对象由header以及body两部分组成。其中body存储对象的实例变量字段，而header则包含markword+metadata.</li>
+  </ul>
 </blockquote>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> *  普通对象
@@ -256,6 +260,10 @@
 
 <h5 id="字段">字段</h5>
 
+<blockquote>
+  <p>知道了对象的内存布局之后，是可以计算出当前类的实例变量字段大小，但Java作为一门面向对象语言，子类会继承父类的实例变量字段，因此在计算对象的大小时，需要考虑字段继承问题.</p>
+</blockquote>
+
 <ul>
   <li>字段继承</li>
   <li>字段排序</li>
@@ -265,8 +273,8 @@
 
 <h6 id="字段继承">字段继承</h6>
 <ul>
-  <li>在面向对象的设计中，子类会继承父类的字段，虚方法等。Java作为面向对象实现最彻底的语言亦遵守这个规定</li>
-  <li>在Hotspot的实现中，子类的object model 将继承得来的字段直接存储在对象中</li>
+  <li>在面向对象的设计中，子类会继承父类的字段，虚方法等。Java作为面向对象实现最彻底的语言亦遵守这个规定
+ 在Hotspot的实现中，子类的object model 将继承得来的字段直接存储在对象中</li>
 </ul>
 
 <h6 id="字段排序">字段排序</h6>
@@ -308,16 +316,13 @@
 </table>
 
 <table>
-  <tbody>
+  <thead>
     <tr>
-      <td>64位CPU，无压缩</td>
-      <td>对象</td>
-      <td>字段west</td>
+      <th>64位CPU，无压缩</th>
+      <th>对象</th>
+      <th>字段</th>
     </tr>
-  </tbody>
-</table>
-
-<table>
+  </thead>
   <tbody>
     <tr>
       <td>对象</td>
@@ -361,6 +366,10 @@
 </code></pre></div></div>
 
 <h2 id="example">Example</h2>
+
+<blockquote>
+  <p>经过前面预备知识的铺垫，现在来尝试下计算对象的大小吧</p>
+</blockquote>
 
 <h4 id="new-object-">new Object( )</h4>
 
@@ -545,6 +554,8 @@ Class B extend A {
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
+        				
+                            
         				
                             
         				

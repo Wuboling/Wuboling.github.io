@@ -7,7 +7,7 @@
     <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Every failure is leading towards success.">
-    <meta name="keywords"  content="hello,hello,helloword">
+    <meta name="keywords"  content="hello,hello,helloworld">
     <meta name="theme-color" content="">
     
     <title>Hello World | 和菜头</title>
@@ -183,6 +183,42 @@
             ">
     			
 <div class="post-preview">
+    <a href="/2018/09/12/cpu/">
+        <h2 class="post-title">
+            计算机组成原理
+        </h2>
+        
+        <h3 class="post-subtitle">
+            cpu cache知识总结
+        </h3>
+        
+        <div class="post-content-preview">
+            相关知识
+
+CPU Cache相关
+
+架构
+
+AMD Athlon 处理器架构
+
+  望这张图，眼花缭乱？其实现代的CPU可以简化为两部分：cpu核心，cache。而本文的核心在与讲解cache。
+  Athlon的缓存架构为2层:L1和L2。
+
+
+
+
+&lt;/br&gt;
+&lt;/br&gt;
+在了解Athlon缓存架构之前，我们需要了解下CPU的相关属性，以帮助理解为何需要cpu缓存...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by west on September 12, 2018
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2018/08/20/network/">
         <h2 class="post-title">
             网络知识
@@ -249,9 +285,9 @@ TODO
 <hr>
 
 <div class="post-preview">
-    <a href="/2018/08/17/javaObjectMode/">
+    <a href="/2018/08/17/javaObjectModel/">
         <h2 class="post-title">
-            Java Object model
+            Java Object Model
         </h2>
         
         <h3 class="post-subtitle">
@@ -261,6 +297,7 @@ TODO
         <div class="post-content-preview">
             Q:如何计算hotspot虚拟机中对象的大小
 
+// 求object对象的大小
 Object object = new Object();
 
 
@@ -269,14 +306,9 @@ Object object = new Object();
 对象组成
 
 
-  Object model = header + body
-
-
- *  普通对象
- *                          
- *  +--------------------+ 
- *  |      markWord      | \
-...
+  
+    Object model = header + body.
+    在hotspot的的对象模型中，对象由header以及body两部分组成。其中body存储对象的实例变量字段，而header则包含markwo...
         </div>
     </a>
     <p class="post-meta">
@@ -406,6 +438,8 @@ JVM
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
+                        
+                            
                         
                             
                         
